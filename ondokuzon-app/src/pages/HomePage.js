@@ -17,13 +17,14 @@ import Sidebar from "../components/organisms/Sidebar";
 import Content from "../components/organisms/Content";
 import Template from "../components/template/Template";
 const HomePage = () => {
-  const { total, baseCurrency, setBaseCurrency, currencies, setCurrencies } =
-    useAmount();
+  const { data, setData } = useAmount();
   return (
     <div className="App">
       <Template>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 2 }}>
-          <Card type={"income"} />
+          {data.map((v) => (
+            <Card data={v} />
+          ))}
         </Box>
       </Template>
     </div>

@@ -3,8 +3,16 @@ import React from "react";
 import { useAmount } from "../Context/Context";
 
 const Balance = () => {
-  const { total, baseCurrency, setBaseCurrency, currencies, setCurrencies } =
+  const { baseCurrency, data, setBaseCurrency, currencies, setCurrencies } =
     useAmount();
+  let total = 0;
+  data.forEach((element) => {
+    if (element.type === "income") {
+      total += element.amount;
+    } else {
+      total -= element.amount;
+    }
+  });
   return (
     <Box
       sx={(theme) => ({

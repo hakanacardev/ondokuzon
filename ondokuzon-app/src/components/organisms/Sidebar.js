@@ -10,9 +10,14 @@ import React, { useState } from "react";
 import { useAmount } from "../Context/Context";
 
 const Sidebar = () => {
-  const { total, baseCurrency, setBaseCurrency, currencies, setCurrencies } =
-    useAmount();
+  const { setBaseCurrency, currencies, addData } = useAmount();
   const [modalOpen, setModalOpen] = useState(false);
+  const [form, setForm] = useState({
+    amount: 0,
+    current: "USD",
+    desc: "",
+    type: "income",
+  });
   const style = {
     position: "absolute",
     top: "50%",
@@ -23,6 +28,8 @@ const Sidebar = () => {
     border: "2px solid #000",
     boxShadow: 24,
     p: 4,
+    display: "grid",
+    gap: 2,
   };
   return (
     <Box sx={{ display: "grid", gridTemplateRows: "1fr auto", p: 2 }}>
@@ -32,11 +39,22 @@ const Sidebar = () => {
             sx={{ flex: 1 }}
             fullWidth
             variant="contained"
-            onClick={() => setModalOpen(true)}
+            onClick={() => {
+              setModalOpen(true);
+              setForm((prev) => ({ ...prev, type: "income" }));
+            }}
           >
             Income
           </Button>
-          <Button fullWidth sx={{ flex: 1 }} variant="outlined">
+          <Button
+            fullWidth
+            sx={{ flex: 1 }}
+            variant="outlined"
+            onClick={() => {
+              setModalOpen(true);
+              setForm((prev) => ({ ...prev, type: "expense" }));
+            }}
+          >
             Expense
           </Button>
         </Box>
@@ -72,12 +90,48 @@ const Sidebar = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+          <Typography
+            id="modal-modal-title"
+            alignItems={"center"}
+            display={"flex"}
+            justifyContent={"center"}
+            variant="h6"
+            component="h2"
+          >
+            {form.type === "income" ? "Income" : "Expense"}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <TextField
+            value={form.amount}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, amount: e.target.value }))
+            }
+          />
+          <Autocomplete
+            size="small"
+            value={form.current}
+            onChange={(event, newValue) =>
+              setForm((prev) => ({ ...prev, current: newValue }))
+            }
+            options={Object.keys(currencies)}
+            renderInput={(params) => (
+              <TextField {...params} placeholder="Currency" />
+            )}
+          />
+          <TextField
+            value={form.desc}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, desc: e.target.value }))
+            }
+          />
+          <Button
+            variant="contained"
+            onClick={() => {
+              addData(form);
+              setModalOpen(false);
+            }}
+          >
+            Submit
+          </Button>
         </Box>
       </Modal>
     </Box>

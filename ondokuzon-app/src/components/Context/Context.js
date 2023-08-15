@@ -4,6 +4,10 @@ export const Context = createContext();
 
 const AmountContext = ({ children }) => {
   const [baseCurrency, setBaseCurrency] = useState("USD");
+
+  const [data, setData] = useState(
+    localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : []
+  );
   const [total, setTotal] = useState(0);
   const [currencies, setCurrencies] = useState([]);
   const convertUsd = (amount, currency) => {
@@ -22,6 +26,14 @@ const AmountContext = ({ children }) => {
   useEffect(() => {
     getCurrency();
   }, []);
+
+  const addData = (form) => {
+    const parseData = convertUsd(form.amount, form.current);
+    const newData = [...data, { ...form, amount: parseData }];
+    setData(newData);
+    localStorage.setItem("data", JSON.stringify(newData));
+  };
+
   return (
     <Context.Provider
       value={{
@@ -31,6 +43,9 @@ const AmountContext = ({ children }) => {
         setTotal,
         currencies,
         setCurrencies,
+        addData,
+        data,
+        setData,
       }}
     >
       {children}
