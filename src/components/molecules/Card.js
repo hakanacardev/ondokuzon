@@ -18,7 +18,6 @@ const Card = ({ data }) => {
         border: "1px solid rgb(252 165 165);",
       };
       break;
-
     default:
       break;
   }

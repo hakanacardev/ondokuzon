@@ -6,7 +6,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import Card from "../molecules/Card";
 import { useAmount } from "../Context/Context";
 
 const Content = ({ children }) => {

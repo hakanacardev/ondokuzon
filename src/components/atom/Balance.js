@@ -3,8 +3,7 @@ import React from "react";
 import { useAmount } from "../Context/Context";
 
 const Balance = () => {
-  const { baseCurrency, data, setBaseCurrency, currencies, setCurrencies } =
-    useAmount();
+  const { baseCurrency, data, currencies } = useAmount();
   let total = 0;
   data.forEach((element) => {
     if (element.type === "income") {

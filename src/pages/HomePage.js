@@ -17,7 +17,7 @@ import Sidebar from "../components/organisms/Sidebar";
 import Content from "../components/organisms/Content";
 import Template from "../components/template/Template";
 const HomePage = () => {
-  const { data, setData } = useAmount();
+  const { data } = useAmount();
   return (
     <div className="App">
       <Template>
