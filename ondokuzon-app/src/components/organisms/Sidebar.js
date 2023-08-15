@@ -10,7 +10,8 @@ import React, { useState } from "react";
 import { useAmount } from "../Context/Context";
 
 const Sidebar = () => {
-  const { setBaseCurrency, currencies, addData } = useAmount();
+  const { setBaseCurrency, currencies, addData, data, baseCurrency } =
+    useAmount();
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({
     amount: 0,
@@ -31,6 +32,16 @@ const Sidebar = () => {
     display: "grid",
     gap: 2,
   };
+
+  let totalIncome = 0;
+  let totalExpense = 0;
+  data.forEach((element) => {
+    if (element.type === "income") {
+      totalIncome += element.amount;
+    } else {
+      totalExpense += element.amount;
+    }
+  });
   return (
     <Box sx={{ display: "grid", gridTemplateRows: "1fr auto", p: 2 }}>
       <Box>
@@ -62,6 +73,7 @@ const Sidebar = () => {
           <Typography>Base Currency:</Typography>
 
           <Autocomplete
+            disableClearable
             size="small"
             options={Object.keys(currencies)}
             onChange={(event, newValue) => {
@@ -72,8 +84,14 @@ const Sidebar = () => {
             )}
           />
         </Box>
-        <Typography>Total Incomes: 0TRY</Typography>
-        <Typography>Total Expenses: 0TRY</Typography>
+        <Typography>
+          Total Incomes:{" "}
+          {(totalIncome * currencies[baseCurrency]).toFixed(2) + baseCurrency}{" "}
+        </Typography>
+        <Typography>
+          Total Expenses:{" "}
+          {(totalExpense * currencies[baseCurrency]).toFixed(2) + baseCurrency}{" "}
+        </Typography>
       </Box>
       <Typography
         variant="overline"
