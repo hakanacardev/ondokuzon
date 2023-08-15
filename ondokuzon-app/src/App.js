@@ -10,12 +10,18 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Balance from "./components/atom/Balance";
 
 function App() {
-  const [Currency, setCurrency] = useState([]);
+  const options = [
+    { label: "None", id: "none" },
+    { label: "Income", id: "income" },
+    { label: "Expense", id: "expense" },
+  ];
+  const [currencies, setCurrencies] = useState([]);
   const [filter, setFilter] = useState({
-    type: "none",
-    currency: null,
+    type: options[0],
+    currency: "USD",
   });
   const getCurrency = () => {
     fetch(
@@ -23,13 +29,18 @@ function App() {
     )
       .then((res) => res.json())
       .then((res) => {
-        setCurrency(res.data);
-        setFilter((prev) => ({ ...prev, currency: res.data[0] }));
+        setCurrencies(res.data);
       });
   };
   useEffect(() => {
     getCurrency();
   }, []);
+  const [baseCurrency, setBaseCurrency] = useState("USD");
+  const [total, setTotal] = useState(200);
+  const convertUsd = (amount, currency) => {
+    const convertUsd = amount * currencies[currency];
+    return convertUsd;
+  };
 
   /*   total * Currency[selectedCurreny]; */
 
@@ -57,11 +68,6 @@ function App() {
       fontFamily: "Roboto",
     },
   });
-  const options = [
-    { label: "None", id: "none" },
-    { label: "Income", id: "income" },
-    { label: "Expense", id: "expense" },
-  ];
 
   return (
     <ThemeProvider theme={theme}>
@@ -81,7 +87,7 @@ function App() {
           <Typography variant="overline" color="primary" fontWeight={600}>
             Finance Tracker
           </Typography>
-          <Box
+          {/* <Box
             sx={(theme) => ({
               backgroundColor: "rgb(243 232 255)",
               px: 2,
@@ -90,8 +96,12 @@ function App() {
               color: theme.palette.primary.main,
             })}
           >
-            <Typography>Balance: 0TRY</Typography>
-          </Box>
+            <Typography>
+              Balance:{" "}
+              {(total * currencies[baseCurrency]).toFixed(2) + baseCurrency}
+            </Typography>
+          </Box> */}
+          <Balance />
         </Box>
         <Box
           sx={{
@@ -120,7 +130,10 @@ function App() {
 
                 <Autocomplete
                   size="small"
-                  options={Object.keys(Currency)}
+                  options={Object.keys(currencies)}
+                  onChange={(event, newValue) => {
+                    setBaseCurrency(newValue);
+                  }}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Currency" />
                   )}
@@ -166,19 +179,39 @@ function App() {
                 value={filter.type}
                 options={options}
                 getOptionLabel={(option) => option.label}
+                onChange={(event, newValue) => {
+                  setFilter((prev) => ({ ...prev, type: newValue }));
+                }}
                 renderInput={(params) => <TextField {...params} />}
               />
               <Autocomplete
                 size="small"
                 value={filter.currency}
-                options={Object.keys(Currency)}
-                
+                options={Object.keys(currencies)}
+                onChange={(event, newValue) => {
+                  setFilter((prev) => ({ ...prev, currency: newValue }));
+                }}
                 renderInput={(params) => <TextField {...params} />}
               />
               <Button variant="outlined">Clear</Button>
             </Box>
 
-            <Typography>No Match</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#fca5a5",
+                borderRadius: 2,
+                alignSelf: "center",
+                mt: 2,
+              }}
+            >
+              <Typography>
+                Type: Income, Amount: 165USD, Explanation: fdrdcrcdr
+              </Typography>
+            </Box>
           </Box>
         </Box>
         <Modal
