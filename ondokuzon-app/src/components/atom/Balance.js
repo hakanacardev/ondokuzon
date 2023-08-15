@@ -1,7 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
+import { useAmount } from "../Context/Context";
 
 const Balance = () => {
+  const { total, baseCurrency, setBaseCurrency, currencies, setCurrencies } =
+    useAmount();
   return (
     <Box
       sx={(theme) => ({
